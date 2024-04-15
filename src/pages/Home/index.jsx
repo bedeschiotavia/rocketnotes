@@ -5,8 +5,8 @@ import { Brand, Container, Content, Menu, NewNote, Search } from './styles'
 import { ButtonText } from '../../components/ButtonText'
 import { Header } from '../../components/Header'
 import { Input } from '../../components/Input'
-import { Section } from '../../components/Section'
 import { Note } from '../../components/Notes'
+import { Section } from '../../components/Section'
 
 export function Home() {
   return (
@@ -44,7 +44,7 @@ export function Home() {
 
       <NewNote>
         <FiPlus/>
-        Criar nota
+        Create note
       </NewNote>
     </Container>
   )
