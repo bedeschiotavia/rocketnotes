@@ -1,4 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Container, Content, Links } from './styles'
+
+import { useNavigate, useParams } from 'react-router-dom'
+
+import { api } from '../../services/api'
 
 import { Button } from '../../components/Button'
 import { ButtonText } from '../../components/ButtonText'
@@ -7,39 +12,79 @@ import { Section } from '../../components/Section'
 import { Tag } from '../../components/Tag'
 
 export function Details() {
+  const [data, setData] = useState(null)
+
+  const params = useParams()
+
+  const navigate = useNavigate()
+
+  function handleBack(){
+    navigate("/")
+  }
+
+  async function handleRemove(){
+    const confirm = window.confirm("Do you want to remove the note?")
+
+    if(confirm) {
+      await api.delete(`notes/${params.id}`)
+      navigate("/")
+    }
+  }
+
+  useEffect(()=> {
+    async function fetchNote(){
+      const response = await api.get(`/notes/${params.id}`)
+      setData(response.data)
+    }
+
+    fetchNote()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
   return (
     <Container>
       <Header />
-      <main>
-        
-        <Content>
-          <ButtonText title="Delete Note" />
+      {
+        data &&
+        <main>
+          <Content>
+            <ButtonText title="Delete Note" onClick={handleRemove}/>
 
-          <h1>Node.js Intro</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi enim ratione dolor nihil voluptatum rerum fugiat accusantium, deserunt maxime totam nisi. Cum dolore quasi sequi tempore eaque, sunt eveniet sed?
-          </p>
+            <h1>{data.title}</h1>
+            <p>
+              {data.description}
+            </p>
+            {
+              data.links &&
+              <Section title="Links">
+                <Links>
+                  {
+                    data.links.map(link =>(
+                      <li key={String(link.id)}>
+                        <a href={link.url} target="_blank">{link.url}</a>
+                      </li>
+                    ))
+                  }
+                </Links>
+              </Section>
+            }
 
-          <Section title="Links">
-            <Links>
-              <li>
-                <a href="#">Link 1</a>
-              </li>
-              <li>
-                <a href="#">Link 2</a>
-              </li>
-            </Links>
+            {
+              data.tags &&
+              <Section title="Tags">
+                
+                  {
+                    data.tags.map(tag =>(
+                      <Tag key={String(tag.id)} title={tag.name}/>
+                    ))
+                  }
+              </Section>
+            }
 
-          </Section>
-
-          <Section title="Tags">
-            <Tag title="express" />
-            <Tag title="node" />
-          </Section>
-
-          <Button title="Back" />
-        </Content>
-      </main>
+            <Button title="Back" onClick={handleBack}/>
+          </Content>
+        </main>
+      }
       
     </Container>
   )
