@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
-import { Link } from 'react-router-dom'
 import { Button } from '../../components/Button'
+import { ButtonText } from '../../components/ButtonText'
 import { Header } from '../../components/Header'
 import { Input } from '../../components/Input'
 import { NoteItem } from '../../components/NoteItem'
@@ -44,6 +44,10 @@ export function New() {
     setTags(prevState=> prevState.filter(tag => tag !==deleted))
   }
 
+  function handleBack(){
+    navigate(-1)
+  }
+
   async function handleNewNote(){
 
     if (!title) {
@@ -67,7 +71,7 @@ export function New() {
 
     alert("Note successfully created")
 
-    navigate("/")
+    navigate(-1)
   }
 
 
@@ -79,7 +83,7 @@ export function New() {
         <Form>
           <header>
             <h1>Create note</h1>
-            <Link to="/">back</Link>
+            <ButtonText title="back" onClick={handleBack}/>
           </header>
 
           <Input
