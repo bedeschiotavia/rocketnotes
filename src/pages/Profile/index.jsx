@@ -27,16 +27,6 @@ export function Profile() {
 
   const navigate = useNavigate()
 
-  async function handleUpdate() {
-    const user = {
-      name,
-      email,
-      password: passwordNew,
-      old_password: passwordOld,
-    }
-    await updateProfile({ user, avatarFile })
-  }
-
   function handleChangeAvatar(event) {
     const file = event.target.files[0]
     setAvatarFile(file)
@@ -44,6 +34,19 @@ export function Profile() {
     const imagePreview = URL.createObjectURL(file)
     setAvatar(imagePreview)
 
+  }
+
+  async function handleUpdate() {
+    const updated = {
+      name,
+      email,
+      password: passwordNew,
+      old_password: passwordOld,
+    }
+
+    const userUpdated = Object.assign( user, updated )
+
+    await updateProfile({ user: userUpdated, avatarFile })
   }
 
   function handleBack(){
